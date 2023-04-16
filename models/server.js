@@ -1,5 +1,6 @@
 const express = require('express');
-const cors = require('cors')
+const cors = require('cors');
+const { dbConnection } = require('../data/config');
 
 
 
@@ -10,11 +11,19 @@ class Server{
         this.port = process.env.PORT || 5000;
         this.usersPath = '/api/users'
 
+
+        //Conectar a base de datos
+        this.connectionDB()
+        
         //Middlewares
         this.middlewares();
 
         //Rutas
         this.routes();
+    }
+
+    async connectionDB(){
+        await dbConnection();
     }
 
     middlewares(){
@@ -23,6 +32,7 @@ class Server{
 
         //Json
         this.app.use(express.json())
+        this.app.set('json spaces', 2)
 
         //Carpeta pública
         this.app.use(express.static('public'))
